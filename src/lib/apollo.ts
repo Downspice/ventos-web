@@ -1,0 +1,63 @@
+import { ApolloClient, ApolloLink, HttpLink, InMemoryCache, gql } from "@apollo/client";
+import { getAccessToken } from "./auth-storage";
+
+const apiUrl = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:4000";
+
+const httpLink = new HttpLink({ uri: `${apiUrl}/graphql` });
+
+const authLink = new ApolloLink((operation, forward) => {
+  const token = getAccessToken();
+  operation.setContext(({ headers = {} }) => ({
+    headers: {
+      ...headers,
+      authorization: token ? `Bearer ${token}` : "",
+    },
+  }));
+  return forward(operation);
+});
+
+export const client = new ApolloClient({
+  link: ApolloLink.from([authLink, httpLink]),
+  cache: new InMemoryCache(),
+});
+
+export const MY_ACCESS = gql`
+  query MyAccess {
+    myAccess {
+      permissions
+    }
+    me {
+      id
+      email
+      name
+      avatarUrl
+    }
+    business {
+      id
+      name
+      currency
+    }
+  }
+`;
+
+export const LOGIN = gql`
+  mutation Login($input: LoginInput!) {
+    login(input: $input) {
+      accessToken
+      refreshToken
+      user {
+        id
+        email
+      }
+    }
+  }
+`;
+
+export const REGISTER = gql`
+  mutation Register($input: RegisterInput!) {
+    register(input: $input) {
+      accessToken
+      refreshToken
+    }
+  }
+`;
