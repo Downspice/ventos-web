@@ -7,10 +7,8 @@ import { PasswordInput } from "@/components/ui/password-input";
 import { Label } from "@/components/ui/label";
 import { Separator } from "@/components/ui/separator";
 import { AuthError, AuthLayout } from "@/components/AuthLayout";
-import { LOGIN } from "../lib/apollo";
+import { LOGIN, apiUrl } from "../lib/apollo";
 import { setTokens } from "../lib/auth-storage";
-
-const apiUrl = import.meta.env.VITE_API_URL ?? "http://127.0.0.1:4000";
 
 export default function LoginPage() {
   const navigate = useNavigate();

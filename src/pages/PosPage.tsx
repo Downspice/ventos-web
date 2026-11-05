@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { useMutation, useQuery } from "@apollo/client/react";
 import { gql } from "@apollo/client";
+import { apiUrl } from "@/lib/apollo";
 import { LayoutGrid, List, Minus, Plus, ScanBarcode, Search, ShoppingCart, Trash2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -425,7 +426,7 @@ export default function PosPage() {
   }
 
   async function fetchReceipt(saleId: string, total: number) {
-    const res = await fetch(`${import.meta.env.VITE_API_URL ?? "http://127.0.0.1:4000"}/graphql`, {
+    const res = await fetch(`${apiUrl}/graphql`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
